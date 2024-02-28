@@ -123,7 +123,7 @@ void Server::signalHandler(int signum)
 	exit(signum);
 }
 
-// Tüm kanalları kaldırır ve bağlantıyı kapatır.
+//tüm kanalları siler ve bağlantıyı kapatır.
 void Server::shutdownSrv()
 {
 	string outmessage = "Shutting down the server...\n";

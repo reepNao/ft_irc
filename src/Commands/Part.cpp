@@ -8,67 +8,51 @@ void Part::part(Client* client, vector<string> commandParts, Server* srv)
         client->sendMessage( ":" + client->getHostName() + " 461 " + client->getNickName() + " PART : Not enough parameters" );
         return;
     }
-
     // Hedef kanal adını al
     string target = commandParts.at(1);
-
     // Eğer hedefte virgül yoksa
     if (target.find(',') == string::npos)
         partChannel(client, target, srv);
     else
     {
-        // Virgülle ayrılmış kanal adlarını işle
-        istringstream iss(target);
-        string channelName;
-        while (getline(iss, channelName, ','))
+        istringstream iss(target);//kanal adlarını virgülle ayır
+        string channelName;//kanal adlarını tutacak değişken
+        while (getline(iss, channelName, ','))//ayrılmış her kanal adı için partChannel fonksiyonunu çağır
             partChannel(client, channelName, srv);
     }
 }
 
 void Part::partChannel(Client* client, string channelName, Server* srv)
 {
-    // Eğer kanal adı boşsa veya '#' ile başlamıyorsa
+    //eğer kanal adı yoksa veya kanal adı # ile başlamıyorsa
     if (channelName.empty() || channelName.at(0) != '#')
     {
       	client->sendMessage( ":" + client->getHostName() + " 403 " + client->getNickName() + " " + channelName + " :No such channel" );
         return;
     }
-
-    // Kanal nesnesini al
-    Channel* channel = srv->getChannel(channelName);
-
-    // Eğer kanal bulunamazsa
+    Channel* channel = srv->getChannel(channelName);//kanalı, adıyla birlikte al
     if (!channel)
     {
      	client->sendMessage( ":" + client->getHostName() + " 403 " + client->getNickName() + " " + channelName + " :No such channel" );
-        return;
+        return;//kanal yoksa hata mesajı gönder
     }
-
-    // Eğer kullanıcı kanalda değilse
     if (!channel->isUserOnChannel(client))
     {
         client->sendMessage( ":" + client->getHostName() + " 442 " + client->getNickName() + " " + channelName + " :You're not on that channel" );
-        return;
+        return;//kullanıcı kanalda değilse hata mesajı gönder
     }
+    channel->removeUserFromChannel(client);//kanaldan kullanıcıyı çıkar
+    client->removeChannel(channel);//kanalı kanallar listesinden çıkar
 
-    // Kullanıcıyı kanaldan çıkar
-    channel->removeUserFromChannel(client);
-    client->removeChannel(channel);
-
-    // Diğer kullanıcılara ayrılma mesajını yayınla
     string message = ":" + client->getPrefix() + " PART " + channelName + "\n";
-    channel->broadcastMessage(message, client);
+    channel->broadcastMessage(message, client);//kanalda kalan kullanıcılara ayrıldığı kanalı bildir
 
-    // Kullanıcıya ayrıldığı kanalı bildir
-   	client->sendMessage( "You left the channel " + channelName );
-
-    // Eğer kanalda başka kullanıcı yoksa ve kanal varsa
-    if (channel->getChannelClientCount() == 0 && srv->channelExists(channelName))
+   	client->sendMessage( "You left the channel " + channelName );//kullanıcıya ayrıldığı kanalı bildir
+    if (channel->getChannelClientCount() == 0 && srv->channelExists(channelName))//kanalda kullanıcı kalmadıysa
     {
-        // Kanalı sil
    		string channelName = channel->getChannelName();
 		string message = "Channel " + channelName + " is empty, deleting.\n";
 		write( 1, message.c_str(), message.length() );
-		srv->removeChannel( channelName );
+		srv->removeChannel(channelName);//kanalın silindiğini bildir ve kanalı sil
     }
 }

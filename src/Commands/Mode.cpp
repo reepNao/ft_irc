@@ -65,9 +65,3 @@ void Mode::mode(Client *client, vector<string> commandParts, Server *srv)
     else
         client->sendMessage(":" + client->getHostName() + " 501 " + client->getNickName() + " :Invalid MODE flag");
 }
-
-
-
-
-
-

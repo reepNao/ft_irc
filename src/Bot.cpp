@@ -1,18 +1,10 @@
 #include "../includes/Bot.hpp"
 
-// Bot sınıfının yapıcı fonksiyonu
-Bot::Bot(const string &serv, int port, const string &pass)
-	: serv(serv),
-	  port(port),
-	  botPass(pass),
-	  nick("reepNaoBot"),
-	  user("IRC00"),
-	  realname("recep")
+Bot::Bot(const string &serv, int port, const string &pass) : serv(serv), port(port), botPass(pass), nick("reepNaoBot"), user("IRC00"), realname("recep")
 {
 	connectServ();
 }
 
-// Bot sınıfının yıkıcı fonksiyonu
 Bot::~Bot()
 {
 	close(sock);
@@ -41,13 +33,11 @@ void Bot::connectServ()
 		write(STDOUT_FILENO, "Error: Bot socket connection failed.\n", 36);
 		exit(1);
 	}
-
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1)
 	{
 		write(STDOUT_FILENO, "Error: Bot socket fcntl failed.\n", 32);
 		exit(1);
 	}
-
 	if (sock != -1)
 	{
 		sendRegMsg("PASS " + botPass + "\r\n");
@@ -124,15 +114,13 @@ void Bot::processMessage(const string &msg)
 	}
 }
 
-//kanala mesaj gönderen fonksiyon
 void Bot::sendMsg(const string &channel, const string &message)
 {
 	string fullMessage = "PRIVMSG " + channel + " :" + message + "\r\n";
-	send(sock, fullMessage.c_str(), fullMessage.length(), 0);
+	send(sock, fullMessage.c_str(), fullMessage.length(), 0);//kanala mesaj gönderen fonksiyon
 }
 
-// Sunucuya kayıt mesajı gönderen fonksiyon
 void Bot::sendRegMsg(const string &message)
 {
-	send(sock, message.c_str(), message.length(), 0);
+	send(sock, message.c_str(), message.length(), 0);// Sunucuya kayıt mesajı gönderen fonksiyon
 }
