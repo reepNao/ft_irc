@@ -18,13 +18,9 @@ Bu durumda, socket fonksiyonu tarafından otomatik olarak uygun olan protokol se
 
 
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
-
 // bind fonksiyonu, bir soketi belirli bir adres ve port numarasına bağlamak için kullanılır.
-
 // sockfd: Bağlanacak soketin dosya tanımlayıcısını belirtir.
-
 // addr: Bağlanacak adresi ve port numarasını içeren bir sockaddr yapısıdır.
-
 // addrlen: addr yapısının boyutunu belirtir.
 
 
