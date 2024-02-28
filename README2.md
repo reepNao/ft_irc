@@ -17,10 +17,14 @@ Burada:
 Bu durumda, socket fonksiyonu tarafından otomatik olarak uygun olan protokol seçilir. Örneğin, SOCK_STREAM türü için genellikle TCP (Transmission Control Protocol) kullanılır.
 
 
-int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen); 
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+
 // bind fonksiyonu, bir soketi belirli bir adres ve port numarasına bağlamak için kullanılır.
+
 // sockfd: Bağlanacak soketin dosya tanımlayıcısını belirtir.
+
 // addr: Bağlanacak adresi ve port numarasını içeren bir sockaddr yapısıdır.
+
 // addrlen: addr yapısının boyutunu belirtir.
 
 
